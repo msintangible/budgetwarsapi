@@ -1,0 +1,6 @@
+@bugdgetwarsapi_HostAddress = http://localhost:5000
+
+GET {{bugdgetwarsapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+#####

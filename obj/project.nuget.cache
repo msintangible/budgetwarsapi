@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "QMpzb6Ce3+8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\TheSa\\projects\\budgetwarsapi\\bugdgetwarsapi\\bugdgetwarsapi\\bugdgetwarsapi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\TheSa\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.4\\microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
+    "C:\\Users\\TheSa\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
