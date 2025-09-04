@@ -462,3 +462,5 @@ C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\ne
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\refs\System.Xml.XPath.dll
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\refs\System.Xml.XPath.XDocument.dll
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\refs\WindowsBase.dll
+C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\MediatR.dll
+C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\MediatR.Contracts.dll

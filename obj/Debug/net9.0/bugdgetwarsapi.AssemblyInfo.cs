@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("bugdgetwarsapi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c961a7c4c26fd8fec1174e6debd338e8a9770910")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b35bae681ee79cb7b4f1aa06ea8a4ce17a350157")]
 [assembly: System.Reflection.AssemblyProductAttribute("bugdgetwarsapi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("bugdgetwarsapi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
