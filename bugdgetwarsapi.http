@@ -4,3 +4,10 @@ GET {{bugdgetwarsapi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 #####
+
+
+### Create Expense
+POST {{bugdgetwarsapi_HostAddress}}/api/expense
+Content-Type: application/json
+Accept: application/json
+

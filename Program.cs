@@ -1,3 +1,4 @@
+using System.Reflection;
 using bugdgetwarsapi.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddControllers(); 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 
 //my ssqldb connection
  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -22,7 +25,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
+app.MapControllers();
 app.UseHttpsRedirection();
 
 var summaries = new[]
