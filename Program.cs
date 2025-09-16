@@ -11,7 +11,16 @@ builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // React app URL
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 //my ssqldb connection
  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -27,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 app.MapControllers();
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 var summaries = new[]
 {

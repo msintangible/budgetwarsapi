@@ -26,11 +26,15 @@ public  static class DeleteExpense
 
         public static UnknownError MkUnknownError() => new();
     }
-
-    public class CommandHandler : IRequestHandler<Command, Response>
+public class CommandHandler : IRequestHandler<Command, Response>
     {
         private readonly ApplicationDbContext _context;
-        
+
+        public CommandHandler(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var entity =  await _context.Set<Expense>().FirstOrDefaultAsync(x => request.Id == x.Id,cancellationToken);
@@ -45,3 +49,4 @@ public  static class DeleteExpense
         }
     }
 }
+    

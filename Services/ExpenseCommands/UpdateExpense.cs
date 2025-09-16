@@ -1,4 +1,5 @@
 using bugdgetwarsapi.Database;
+using bugdgetwarsapi.DTOs;
 using bugdgetwarsapi.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,14 @@ public  static class UpdateExpense
     
     public abstract record Response
     {
-        public record Success( Expense model): Response;
+        public record Success( ExpenseDto model): Response;
         
-        public static Success MkSuccess(Expense model) => new(model); 
+         public static Success MkSuccess(Expense expense)
+        {
+            var mapper = new ExpenseMapper.ExpenseMapper();
+            var dto = mapper.ToDto(expense);
+            return new Success(dto);
+        }
         
         public record NotFound : Response;
 

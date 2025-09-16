@@ -36,7 +36,7 @@ public class ExpenseController : Controller
 
         return response switch
         {
-            GetExpenseById.Response.Success  { Expense: var model }  => Ok(model),
+            GetExpenseById.Response.Success  { model: var model }  => Ok(model),
             GetExpenseById.Response.NotFound => NotFound(),
 
             _ => throw new ArgumentOutOfRangeException()

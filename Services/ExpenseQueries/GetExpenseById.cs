@@ -1,4 +1,5 @@
 using bugdgetwarsapi.Database;
+using bugdgetwarsapi.DTOs;
 using bugdgetwarsapi.Models;
 using MediatR;
 
@@ -10,8 +11,14 @@ public  static class GetExpenseById
     
     public abstract record Response {
         
-        public record Success(Expense Expense) : Response;
-        public static Success MkSuccess(Expense expense) => new(expense);
+        public record Success( ExpenseDto model): Response;
+        
+        public static Success MkSuccess(Expense expense)
+        {
+            var mapper = new ExpenseMapper.ExpenseMapper();
+            var dto = mapper.ToDto(expense);
+            return new Success(dto);
+        }
         
         public record NotFound : Response;
 

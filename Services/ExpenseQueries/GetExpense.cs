@@ -1,4 +1,5 @@
 using bugdgetwarsapi.Database;
+using bugdgetwarsapi.DTOs;
 using bugdgetwarsapi.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +12,21 @@ public static class GetExpense
 
     public abstract record Response
     {
-        public record Success(List<Expense> Expenses): Response;
-        public static Success MkSuccess(List<Expense> Expenses) => new(Expenses);
+        public record Success(List<ExpenseDto> Expenses) : Response;
+
+        public static Success MkSuccess(List<Expense> expenses)
+        {
+            var mapper = new ExpenseMapper.ExpenseMapper();
+            var dtoList = expenses.Select(exp => mapper.ToDto(exp)).ToList();
+            return new Success(dtoList);
+        }
         
         public record NotFound(): Response;
         
         public static NotFound MkNotFound() => new();
         
     }
-    
+
     public class GetExpenseHandler : IRequestHandler<Query, Response>
     {
         private readonly ApplicationDbContext _context;
@@ -29,21 +36,21 @@ public static class GetExpense
             _context = context;
         }
 
-        public async  Task<Response> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Response> Handle(Query request, CancellationToken cancellationToken)
         {
+            // Query the entity
             var entities = await _context.Set<Expense>().ToListAsync(cancellationToken);
 
             if (!entities.Any())
-            {
-                return new Response.NotFound();
-            }
+                return Response.MkNotFound(); // or Response.NotFound()
 
-          
-            return new Response.Success(entities);
+            // Map to DTO
+            var dtoList = entities.Select(e => new ExpenseMapper.ExpenseMapper().ToDto(e)).ToList();
+
+            return new Response.Success(dtoList);
         }
     }
-    
-    
-    
-    
+
+
+
 }
