@@ -1,5 +1,7 @@
 using System.Reflection;
 using bugdgetwarsapi.Database;
+using bugdgetwarsapi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +27,27 @@ builder.Services.AddCors(options =>
 //my ssqldb connection
  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContextPool<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-    
+
+
+//  Registers identity servies  handles roles  and password
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        // Optional: password rules
+        options.Password.RequireDigit = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 6;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders(); // enables password reset tokes and email confirmation tokens
+
+// 3️⃣ Add authentication with cookies
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/auth/login";      // redirect path if not logged in
+    options.AccessDeniedPath = "/auth/access-denied";
+});
+
 
 var app = builder.Build();
 
@@ -36,7 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 app.MapControllers();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();  
+app.UseAuthorization();
 app.UseCors();
 
 var summaries = new[]
