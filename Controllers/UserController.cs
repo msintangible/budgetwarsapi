@@ -68,6 +68,34 @@ public class UserController: Controller
         
         return Ok(userDto);
     }
-    
+    [HttpPut("id/{id}")]
+    public async Task<IActionResult> UpdateUser([FromRoute] string id, [FromBody] UserDto dto)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return NotFound("User not found");
+
+        user.Email = dto.Email;
+        user.UserName = dto.UserName;
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok("User updated successfully");
+    }
+    [HttpDelete("id/{id}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return NotFound("User not found");
+
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok("User deleted successfully");
+    }
     
 }

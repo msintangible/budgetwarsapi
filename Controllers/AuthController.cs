@@ -25,19 +25,16 @@ public class AuthController : ControllerBase
         
         // Normalize email and username
         var normalizedEmail = _userManager.NormalizeEmail(dto.Email);
-        var normalizedUserName = _userManager.NormalizeName(dto.Username);
+        var normalizedFirstName = _userManager.NormalizeName(dto.FirstName);
+        var normalizedLastName = _userManager.NormalizeName(dto.LastName);
+
 
         // Check if email already exists
         var existingEmail = await _userManager.FindByEmailAsync(normalizedEmail);
         if (existingEmail != null)
             return BadRequest("Email is already in use");
 
-        // Check if username already exists
-        var existingUserName = await _userManager.FindByNameAsync(normalizedUserName);
-        if (existingUserName != null)
-            return BadRequest("Username is already taken");
-
-        var user = new ApplicationUser { UserName = dto.Username, Email = dto.Email };
+        var user = new ApplicationUser { FirstName = dto.FirstName, LastName = dto.LastName,Email = dto.Email };
         var result = await _userManager.CreateAsync(user, dto.Password);
 
         if (!result.Succeeded)

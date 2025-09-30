@@ -1,6 +1,7 @@
 using System.Reflection;
 using bugdgetwarsapi.Database;
 using bugdgetwarsapi.Models;
+using bugdgetwarsapi.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,8 @@ builder.Services.AddCors(options =>
  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContextPool<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+//jwtoptions
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.jwtOptionsKey));
 
 //  Registers identity servies  handles roles  and password
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -37,6 +40,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 6;
+        options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders(); // enables password reset tokes and email confirmation tokens
