@@ -1,9 +1,14 @@
 using System.Reflection;
+using System.Text;
+using bugdgetwarsapi.Authencation.Abstracts;
+using bugdgetwarsapi.Authencation.Processors;
 using bugdgetwarsapi.Database;
 using bugdgetwarsapi.Models;
 using bugdgetwarsapi.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers(); 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 // Add CORS policy
 builder.Services.AddCors(options =>
@@ -51,7 +57,37 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/auth/login";      // redirect path if not logged in
     options.AccessDeniedPath = "/auth/access-denied";
 });
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    var jwtOptions = builder.Configuration.GetSection(JwtOptions.jwtOptionsKey).Get<JwtOptions>() ??
+                     throw new ArgumentException(nameof(JwtOptions));
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtOptions.Issuer,
+        ValidAudience = jwtOptions.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.secret))
 
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["ACCESS_Token"];
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
