@@ -1,61 +1,55 @@
+using bugdgetwarsapi.Authencation.Abstracts;
 using bugdgetwarsapi.DTOs;
-using bugdgetwarsapi.Models;
-using Microsoft.AspNetCore.Identity;
+using bugdgetwarsapi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bugdgetwarsapi.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/[controller]")] // This makes the route: api/auth
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager; // handles  crud operations for  user
-    private readonly SignInManager<ApplicationUser> _signInManager; // focus on handling the authecation process  logging in and logging out  2fa and cookes
+    private readonly IAccountService _accountService;
 
-    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    // We inject the service you already created instead of raw Managers
+    public AuthController(IAccountService accountService)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
+        _accountService = accountService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
-    
     {
-        
-        // Normalize email and username
-        var normalizedEmail = _userManager.NormalizeEmail(dto.Email);
-        var normalizedFirstName = _userManager.NormalizeName(dto.FirstName);
-        var normalizedLastName = _userManager.NormalizeName(dto.LastName);
-
-
-        // Check if email already exists
-        var existingEmail = await _userManager.FindByEmailAsync(normalizedEmail);
-        if (existingEmail != null)
-            return BadRequest("Email is already in use");
-
-        var user = new ApplicationUser { FirstName = dto.FirstName, LastName = dto.LastName,Email = dto.Email };
-        var result = await _userManager.CreateAsync(user, dto.Password);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        return Ok("User registered successfully");
+        await _accountService.RegisterAsync(dto);
+        return Ok(new { message = "User registered successfully" });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
     {
-        var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure: false);
-        if (!result.Succeeded) return Unauthorized("Invalid credentials");
+        await _accountService.LoginAsync(dto);
+        return Ok(new { message = "Login successful" });
+    }
 
-        return Ok("User logged in successfully");
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh()
+    {
+        // Extract the refresh token from the cookie manually
+        var refreshToken = Request.Cookies["REFRESH_Token"];
+        
+        if (string.IsNullOrEmpty(refreshToken))
+            return Unauthorized("Refresh token missing");
+
+        await _accountService.RefreshTokenAsync(refreshToken);
+        return Ok(new { message = "Token refreshed" });
     }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
-        await _signInManager.SignOutAsync();
-        return Ok("User logged out");
+        // To log out a cookie-based JWT system, we simply tell the browser to delete them
+        Response.Cookies.Delete("ACCESS_Token");
+        Response.Cookies.Delete("REFRESH_Token");
+        return Ok(new { message = "Logged out successfully" });
     }
 }

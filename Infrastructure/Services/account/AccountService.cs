@@ -3,9 +3,8 @@ using bugdgetwarsapi.DTOs;
 using bugdgetwarsapi.Expections;
 using bugdgetwarsapi.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 
-namespace bugdgetwarsapi.Services.account;
+namespace bugdgetwarsapi.Infrastructure.Services.account;
 
 public class AccountService : IAccountService
 {
