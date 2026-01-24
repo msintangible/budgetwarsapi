@@ -19,6 +19,7 @@ public class AuthTokenProcessor : IAuthTokenProcessor
     public AuthTokenProcessor(IOptions<JwtOptions> options, IHttpContextAccessor httpContextAccessor)
     {
        _jwtOptions = options.Value;  //acess jwtoptions values    
+       _httpContextAccessor = httpContextAccessor; 
     }
 
     public (string jwtToken, DateTime expiresAtUtc) GenerateJwtToken(UserDto user)

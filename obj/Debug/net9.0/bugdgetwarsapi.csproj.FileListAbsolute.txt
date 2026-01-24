@@ -465,3 +465,5 @@ C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\ne
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\MediatR.dll
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\MediatR.Contracts.dll
 C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\TheSa\projects\budgetwarsapi\bugdgetwarsapi\bugdgetwarsapi\bin\Debug\net9.0\Scalar.AspNetCore.dll

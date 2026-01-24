@@ -3,12 +3,17 @@ using System.Text;
 using bugdgetwarsapi.Authencation.Abstracts;
 using bugdgetwarsapi.Authencation.Processors;
 using bugdgetwarsapi.Database;
+using bugdgetwarsapi.Database.Repositories;
+using bugdgetwarsapi.DTOs;
+using bugdgetwarsapi.Handlers;
 using bugdgetwarsapi.Models;
 using bugdgetwarsapi.Options;
+using bugdgetwarsapi.Services.account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +24,9 @@ builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 // Add CORS policy
 builder.Services.AddCors(options =>
@@ -88,6 +96,7 @@ builder.Services.AddAuthentication(opt =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -95,31 +104,43 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(opt =>
+    {
+        opt.WithTitle("budget wars  refresh token API");   
+    });
+    
 }
 app.MapControllers();
 app.UseHttpsRedirection();
 app.UseAuthentication();  
 app.UseAuthorization();
+app.UseExceptionHandler(_ => { });
+
 app.UseCors();
 
-var summaries = new[]
+app.MapPost("api/account/register", async (IAccountService accountService, UserRegisterDto dto) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+     await accountService.RegisterAsync(dto);
+    return Results.Ok();
+});
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+app.MapPost("api/account/login", async (IAccountService accountService, UserLoginDto dto) =>
+{
+    await accountService.LoginAsync(dto);
+    return Results.Ok();
+});
+
+app.MapPost("api/account/refresh", async (IAccountService accountService, HttpContext context) =>
+{
+     var refreshToken = context.Request.Cookies["REFRESH_Token"];
+    await accountService.RefreshTokenAsync(refreshToken);
+    return Results.Ok();
+});
+
+
+
+
+
 
 app.Run();
 

@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Identity.Data;
 
 namespace bugdgetwarsapi.Services.account;
 
-public class AccountService
+public class AccountService : IAccountService
 {
     private readonly IAuthTokenProcessor _authTokenProcessor;//dependency injection
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserRepository _userRepository;
     
     
-    public AccountService(IAuthTokenProcessor authTokenProcessor, UserManager<ApplicationUser> userManager)
+    public AccountService(IAuthTokenProcessor authTokenProcessor, UserManager<ApplicationUser> userManager, IUserRepository userRepository)
     {
         _authTokenProcessor = authTokenProcessor;
         _userManager = userManager;
+        _userRepository = userRepository;
     }
 
     public async Task RegisterAsync(UserRegisterDto registerRequest)
@@ -76,7 +78,17 @@ public class AccountService
         {
             throw new RefreshTokenExpection("Refresh token is missing.");
         }
-        
+        var user = await _userRepository.GetUserByRefreshToken(refreshToken);
+        if (user == null)
+        {
+            throw new RefreshTokenExpection("unable to retrieve user  refresh token.");
+        }
+
+        if (user.RefreshTokenExpiry < DateTime.UtcNow)
+        {
+            throw new RefreshTokenExpection("Refresh token has expired.");
+        }
+
     }
 
 }

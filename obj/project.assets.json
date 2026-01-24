@@ -1241,6 +1241,22 @@
           }
         }
       },
+      "Scalar.AspNetCore/2.12.13": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Scalar.AspNetCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "System.ClientModel/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -3955,6 +3971,25 @@
         "pomelo.entityframeworkcore.mysql.nuspec"
       ]
     },
+    "Scalar.AspNetCore/2.12.13": {
+      "sha512": "/6+dbb3pUttWItEHZKRTE1zyfMCUUnm+Ibn13k2+FxF08QQRz5+aYkWWur4GZutrIVOHICwGzyNzghhv82Ke3Q==",
+      "type": "package",
+      "path": "scalar.aspnetcore/2.12.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net10.0/Scalar.AspNetCore.dll",
+        "lib/net10.0/Scalar.AspNetCore.xml",
+        "lib/net8.0/Scalar.AspNetCore.dll",
+        "lib/net8.0/Scalar.AspNetCore.xml",
+        "lib/net9.0/Scalar.AspNetCore.dll",
+        "lib/net9.0/Scalar.AspNetCore.xml",
+        "scalar.aspnetcore.2.12.13.nupkg.sha512",
+        "scalar.aspnetcore.nuspec"
+      ]
+    },
     "System.ClientModel/1.0.0": {
       "sha512": "I3CVkvxeqFYjIVEP59DnjbeoGNfo/+SZrCLpRz2v/g0gpCHaEMPtWSY0s9k/7jR1rAsLNg2z2u1JRB76tPjnIw==",
       "type": "package",
@@ -5004,6 +5039,7 @@
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.8",
       "Microsoft.IdentityModel.Tokens >= 8.14.0",
       "Pomelo.EntityFrameworkCore.MySql >= 9.0.0",
+      "Scalar.AspNetCore >= 2.12.13",
       "System.IdentityModel.Tokens.Jwt >= 8.14.0"
     ]
   },
@@ -5102,6 +5138,10 @@
           "Pomelo.EntityFrameworkCore.MySql": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Scalar.AspNetCore": {
+            "target": "Package",
+            "version": "[2.12.13, )"
           },
           "System.IdentityModel.Tokens.Jwt": {
             "target": "Package",
