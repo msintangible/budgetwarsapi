@@ -118,24 +118,6 @@ app.UseExceptionHandler(_ => { });
 
 app.UseCors();
 
-app.MapPost("api/account/register", async (IAccountService accountService, UserRegisterDto dto) =>
-{
-     await accountService.RegisterAsync(dto);
-    return Results.Ok();
-});
-
-app.MapPost("api/account/login", async (IAccountService accountService, UserLoginDto dto) =>
-{
-    await accountService.LoginAsync(dto);
-    return Results.Ok();
-});
-
-app.MapPost("api/account/refresh", async (IAccountService accountService, HttpContext context) =>
-{
-     var refreshToken = context.Request.Cookies["REFRESH_Token"];
-    await accountService.RefreshTokenAsync(refreshToken);
-    return Results.Ok();
-});
 
 
 
