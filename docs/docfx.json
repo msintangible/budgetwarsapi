@@ -1,0 +1,20 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["bugdgetwarsapi/*.csproj"],
+          "src": ".."
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      { "files": ["api/*.yml"] },
+      { "files": ["**/*.md", "index.md"] }
+    ],
+    "dest": "_site"
+  }
+}
