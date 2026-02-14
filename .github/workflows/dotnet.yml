@@ -1,8 +1,8 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+name: .NET CI & Docs
 
-name: .NET
-
+# Controls when the workflow will run
 on:
   push:
     branches: [ "master" ]
@@ -11,18 +11,55 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      # 1. Pull the latest code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      # 2. Install .NET SDK and enable global NuGet caching for speed
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          cache: true
+      
+      # 3. Pull down NuGet dependencies based on the solution file
+      - name: Restore Dependencies
+        run: dotnet restore
+        
+        #  4. Check Code Formatting
+        # This will fail the build if your code doesn't match your .editorconfig rules.
+        # It's better to fail early than to review messy code!
+      - name: Check Formatting (Linter)
+        run: dotnet format --verify-no-changes --no-restore
+          # 5. Security & Static Analysis Scan
+          # This checks for known vulnerabilities in your NuGet packages.
+      - name: Dependency Vulnerability Scan
+         run: dotnet list package --vulnerable --include-transitive
+      # 4. Compile the project in Release mode (optimizes code)
+      # We use --no-restore because we did it in the previous step
+      - name: Build Project
+        run: dotnet build --configuration Release --no-restore
+      
+      # 5. Execute Unit Tests and log results
+      - name: Run Tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+      
+      # 6. Documentation Step: Install and Run DocFX
+      # This assumes you have a docfx.json file in your repo.
+      # It generates a static website from your code comments (///).
+      - name: Generate Documentation
+        run: |
+          dotnet tool update -g docfx
+          docfx docs/docfx.json
+        
+      
+      # 7. Upload the documentation site as an artifact
+      # You can download this from the GitHub Actions tab to preview your site
+      - name: Upload Docs Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-docs
+          path: docs/_site/
