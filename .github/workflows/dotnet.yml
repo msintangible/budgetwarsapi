@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-          cache: true
+    
       
       # 3. Pull down NuGet dependencies based on the solution file
       - name: Restore Dependencies
