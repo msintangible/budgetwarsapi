@@ -4,7 +4,6 @@ using bugdgetwarsapi.Authencation.Abstracts;
 using bugdgetwarsapi.Authencation.Processors;
 using bugdgetwarsapi.Database;
 using bugdgetwarsapi.Database.Repositories;
-using bugdgetwarsapi.DTOs;
 using bugdgetwarsapi.Handlers;
 using bugdgetwarsapi.Infrastructure.Services.account;
 using bugdgetwarsapi.Models;
@@ -20,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IAuthTokenProcessor, AuthTokenProcessor>();
@@ -40,8 +39,9 @@ builder.Services.AddCors(options =>
 });
 
 //my ssqldb connection
- var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContextPool<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 //jwtoptions
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.jwtOptionsKey));
@@ -62,7 +62,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // 3️⃣ Add authentication with cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/auth/login";      // redirect path if not logged in
+    options.LoginPath = "/auth/login"; // redirect path if not logged in
     options.AccessDeniedPath = "/auth/access-denied";
 });
 builder.Services.AddAuthentication(opt =>
@@ -83,7 +83,6 @@ builder.Services.AddAuthentication(opt =>
         ValidIssuer = jwtOptions.Issuer,
         ValidAudience = jwtOptions.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.secret))
-
     };
     options.Events = new JwtBearerEvents
     {
@@ -104,29 +103,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(opt =>
-    {
-        opt.WithTitle("budget wars  refresh token API");   
-    });
-    
+    app.MapScalarApiReference(opt => { opt.WithTitle("budget wars  refresh token API"); });
 }
+
 app.MapControllers();
 app.UseHttpsRedirection();
-app.UseAuthentication();  
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseExceptionHandler(_ => { });
 
 app.UseCors();
 
 
-
-
-
-
-
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }

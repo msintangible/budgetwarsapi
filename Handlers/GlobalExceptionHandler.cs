@@ -13,7 +13,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         _logger = logger;
     }
 
-    public  async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
         CancellationToken cancellationToken)
     {
         var (statusCode, message) = GetExceptionDetails(exception);

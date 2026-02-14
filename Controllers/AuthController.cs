@@ -1,6 +1,5 @@
 using bugdgetwarsapi.Authencation.Abstracts;
 using bugdgetwarsapi.DTOs;
-using bugdgetwarsapi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bugdgetwarsapi.Controllers;
@@ -36,7 +35,7 @@ public class AuthController : ControllerBase
     {
         // Extract the refresh token from the cookie manually
         var refreshToken = Request.Cookies["REFRESH_Token"];
-        
+
         if (string.IsNullOrEmpty(refreshToken))
             return Unauthorized("Refresh token missing");
 

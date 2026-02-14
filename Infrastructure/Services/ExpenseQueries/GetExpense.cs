@@ -8,23 +8,25 @@ namespace bugdgetwarsapi.Services.ExpenseQueries;
 
 public static class GetExpense
 {
-    public record Query() : IRequest<Response>;
+    public record Query : IRequest<Response>;
 
     public abstract record Response
     {
-        public record Success(List<ExpenseDto> Expenses) : Response;
-
         public static Success MkSuccess(List<Expense> expenses)
         {
             var mapper = new ExpenseMapper.ExpenseMapper();
             var dtoList = expenses.Select(exp => mapper.ToDto(exp)).ToList();
             return new Success(dtoList);
         }
-        
-        public record NotFound(): Response;
-        
-        public static NotFound MkNotFound() => new();
-        
+
+        public static NotFound MkNotFound()
+        {
+            return new NotFound();
+        }
+
+        public record Success(List<ExpenseDto> Expenses) : Response;
+
+        public record NotFound : Response;
     }
 
     public class GetExpenseHandler : IRequestHandler<Query, Response>
@@ -50,7 +52,4 @@ public static class GetExpense
             return new Response.Success(dtoList);
         }
     }
-
-
-
 }

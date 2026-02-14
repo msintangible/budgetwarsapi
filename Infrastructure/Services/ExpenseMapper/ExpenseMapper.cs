@@ -3,20 +3,15 @@ using bugdgetwarsapi.Models;
 
 namespace bugdgetwarsapi.Services.ExpenseMapper;
 
-public   class ExpenseMapper
+public class ExpenseMapper
 {
-    public   ExpenseDto ToDto( Expense expense )
+    public ExpenseDto ToDto(Expense expense)
     {
         return new ExpenseDto
         {
-            Id =   expense.Id,
+            Id = expense.Id,
             Name = expense.Name,
-            Amount = expense.Amount,
-           
+            Amount = expense.Amount
         };
-         
     }
-    
-   
-
 }

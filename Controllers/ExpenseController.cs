@@ -1,10 +1,10 @@
-using bugdgetwarsapi.Models;
 using bugdgetwarsapi.Services.ExpenseCommands;
 using bugdgetwarsapi.Services.ExpenseQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bugdgetwarsapi.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class ExpenseController : Controller
@@ -15,7 +15,7 @@ public class ExpenseController : Controller
     {
         _mediator = mediator;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -36,7 +36,7 @@ public class ExpenseController : Controller
 
         return response switch
         {
-            GetExpenseById.Response.Success  { model: var model }  => Ok(model),
+            GetExpenseById.Response.Success { model: var model } => Ok(model),
             GetExpenseById.Response.NotFound => NotFound(),
 
             _ => throw new ArgumentOutOfRangeException()
@@ -50,18 +50,16 @@ public class ExpenseController : Controller
 
         return response switch
         {
-            CreateExpense.Response.Success { model: var model } 
+            CreateExpense.Response.Success { model: var model }
                 => CreatedAtAction(nameof(GetById), new { id = model.Id }, model),
 
             _ => UnprocessableEntity()
         };
     }
-    
+
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateExpense.Command command)
     {
-     
-
         var response = await _mediator.Send(command);
 
         return response switch
@@ -71,11 +69,11 @@ public class ExpenseController : Controller
             _ => UnprocessableEntity()
         };
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var response = await _mediator.Send(new DeleteExpense.Command{ Id = id});
+        var response = await _mediator.Send(new DeleteExpense.Command { Id = id });
 
         return response switch
         {
@@ -84,6 +82,4 @@ public class ExpenseController : Controller
             _ => UnprocessableEntity()
         };
     }
-    
-    
 }

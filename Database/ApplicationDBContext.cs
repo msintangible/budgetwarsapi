@@ -9,13 +9,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        
     }
+
+    public DbSet<Expense> Expenses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
     }
-    
-    public  DbSet<Expense> Expenses { get; set; }
 }
