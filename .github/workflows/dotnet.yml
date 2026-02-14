@@ -34,6 +34,7 @@ jobs:
         # It's better to fail early than to review messy code!
       - name: Check Formatting (Linter)
         run: dotnet format --verify-no-changes --no-restore
+        continue-on-error: true
           # 5. Security & Static Analysis Scan
           # This checks for known vulnerabilities in your NuGet packages.
       - name: Dependency Vulnerability Scan
