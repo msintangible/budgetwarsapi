@@ -37,8 +37,7 @@ jobs:
           # 5. Security & Static Analysis Scan
           # This checks for known vulnerabilities in your NuGet packages.
       - name: Dependency Vulnerability Scan
-         run: dotnet list package --vulnerable --include-transitive
-      # 4. Compile the project in Release mode (optimizes code)
+        run: dotnet list package --vulnerable --include-transitive # 4. Compile the project in Release mode (optimizes code)
       # We use --no-restore because we did it in the previous step
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
